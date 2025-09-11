@@ -954,6 +954,45 @@ h3.my-profession
 
 
 
+.prince-logo {
+    position: relative;
+    display: inline-block;
+    animation: fadeIn 1.2s ease-in-out; /* logo fade in */
+}
+
+.prince-logo .fa-crown {
+    position: absolute;
+    left: -20px;
+    top: -12px;
+    font-size: 25px;
+    color: var(--skin-colour);
+    transform: rotate(-30deg);
+    animation: crownBounce 2s infinite ease-in-out; /* crown animation */
+}
+
+.prince-logo .prince-p {
+    font-family: 'Baloo 2', cursive;
+    font-size: 40px;
+    position: relative;
+    z-index: 1;
+    animation: slideIn 1s ease-out; /* letter P animation */
+}
+
+/* ==== Animations ==== */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideIn {
+    0% { opacity: 0; transform: translateY(-30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes crownBounce {
+    0%, 100% { transform: rotate(-30deg) translateY(0); }
+    50% { transform: rotate(-15deg) translateY(-5px); }
+}
 
 
 
