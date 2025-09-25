@@ -94,3 +94,20 @@ colorButtons.forEach(btn => {
     });
 });
 
+
+/* ============================ Certificate Modal ============================ */
+// Function to open modal
+function openModal(img) {
+    var modal = document.getElementById("imgModal");
+    var modalImg = document.getElementById("modalImg");
+    var caption = document.getElementById("caption");
+
+    modal.style.display = "block";
+    modalImg.src = img.src;
+    caption.innerHTML = img.alt;
+}
+
+// Function to close modal
+function closeModal() {
+    document.getElementById("imgModal").style.display = "none";
+}

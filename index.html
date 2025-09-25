@@ -321,8 +321,9 @@ I believe in continuous learning and strive to strengthen both my technical and 
             <!-- Portfolio Item -->
             <div class="portfolio-item padd-15">
               <div class="portfolio-item-inner shadow-dark">
-                <div class="portfolio-img">
+                <a href="https://gemini.google.com/app/portfolio-1" target="_blank">
                   <img src="images/portfolio/portfolio-1.jpg" alt="" height="250" width="420">
+                  </a>
                 </div>
               </div>
             </div>
@@ -390,30 +391,30 @@ I believe in continuous learning and strive to strengthen both my technical and 
             <!-- Certification Item -->
             <div class="certification-item padd-15">
               <div class="certification-item-inner">
-                <img src="images/portfolio/portfolio-22.jpg" alt="Certificate 1">
+               <img src="images/certificates/C programming.jpg" alt="C Programming" onclick="openModal(this)">
                 <div class="certification-info">
-                  <h4>Web Development</h4>
-                  <p>Issued by XYZ Academy</p>
+                  <h4>C Programming</h4>
+                  <p>Issued by Swayam (offered by Manipal University Jaipur)</p>
                 </div>
               </div>
             </div>
 
             <div class="certification-item padd-15">
               <div class="certification-item-inner">
-                <img src="images/portfolio/portfolio-33.jpg" alt="Certificate 2">
+                <img src="images/certificates/full stack developer.jpg" alt="Full Stack Development" onclick="openModal(this)">
                 <div class="certification-info">
-                  <h4>Python Programming</h4>
-                  <p>Issued by ABC Institute</p>
+                  <h4>Full Stack Development</h4>
+                  <p>Issued by Simplilearn (SkillUp)</p>
                 </div>
               </div>
             </div>
 
             <div class="certification-item padd-15">
               <div class="certification-item-inner">
-                <img src="images/portfolio/portfolio-33.jpg" alt="Certificate 2">
+                <img src="images/certificates/React js.png" alt="Interactive UI React.JS" onclick="openModal(this)">
                 <div class="certification-info">
-                  <h4>Python Programming</h4>
-                  <p>Issued by ABC Institute</p>
+                  <h4>Interactive UI React.JS</h4>
+                  <p>Issued by SkillEcted(offered by JSSAV Edu Pvt Ltd)</p>
                 </div>
               </div>
             </div>
@@ -588,5 +589,14 @@ I believe in continuous learning and strive to strengthen both my technical and 
    <script src="https://cdnjs.cloudflare.com/ajax/libs/typed.js/2.1.0/typed.umd.js" integrity="sha512-+2pW8xXU/rNr7VS+H62aqapfRpqFwnSQh9ap6THjsm41AxgA0MhFRtfrABS+Lx2KHJn82UOrnBKhjZOXpom2LQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   <script src="js/script.js"></script>
    <script src="js/style-switcher.js"></script>
+
+<!-- Image Modal -->
+<div id="imgModal" class="modal">
+  <span class="close" onclick="closeModal()">&times;</span>
+  <img class="modal-content" id="modalImg">
+  <div id="caption"></div>
+</div>
+
+
 </body>
 </html>
