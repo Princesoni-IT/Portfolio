@@ -83,13 +83,12 @@ function asideSectionTogglerBtn() {
 }
 
 /* ============================ Color Option Auto Close ============================ */
-// Color switcher ke liye auto-close logic
 const styleSwitcher = document.querySelector(".style-switcher");
-const colorButtons = document.querySelectorAll(".colors span");
+const colorButtons = document.querySelectorAll(".style-switcher .colors span");
 
 colorButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-        // user ne color select kiya, ab switcher band kar do
+        // color select karne ke baad hi switcher close
         styleSwitcher.classList.remove("open");
     });
 });
