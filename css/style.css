@@ -930,8 +930,8 @@ h3.my-profession
     }
     .contact .contact-form .col-6,
     .contact .contact-info-item,
-    .portfolio .portfolio-item,
     .service .service-item,
+     .portfolio .portfolio-item,
     .about .about-content .experience,
     .about .about-content .education,
     .about .about-content .skills,
@@ -941,6 +941,7 @@ h3.my-profession
         max-width:100%;
     }
 }
+
 
 
 
@@ -1034,14 +1035,14 @@ h3.my-profession
   position: absolute;
   top: 25px;
   right: 35px;
-  color: #fff;
+  color: var(--skin-colour);
   font-size: 40px;
   font-weight: bold;
   cursor: pointer;
 }
 
 .close:hover {
-  color: #f00;
+   color: var(--skin-colour);
 }
 
 /* Animation */
