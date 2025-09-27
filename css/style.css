@@ -930,8 +930,8 @@ h3.my-profession
     }
     .contact .contact-form .col-6,
     .contact .contact-info-item,
-    .portfolio .portfolio-item,
     .service .service-item,
+     .portfolio .portfolio-item,
     .about .about-content .experience,
     .about .about-content .education,
     .about .about-content .skills,
@@ -954,6 +954,102 @@ h3.my-profession
 
 
 
+
+.prince-logo {
+    position: relative;
+    display: inline-block;
+    animation: fadeIn 1.2s ease-in-out; /* logo fade in */
+}
+
+.prince-logo .fa-crown {
+    position: absolute;
+    left: -20px;
+    top: -12px;
+    font-size: 25px;
+    color: var(--skin-colour);
+    transform: rotate(-30deg);
+    animation: crownBounce 2s infinite ease-in-out; /* crown animation */
+}
+
+.prince-logo .prince-p {
+    font-family: 'Baloo 2', cursive;
+    font-size: 40px;
+    position: relative;
+    z-index: 1;
+    animation: slideIn 1s ease-out; /* letter P animation */
+}
+
+/* ==== Animations ==== */
+@keyframes fadeIn {
+    0% { opacity: 0; transform: scale(0.8); }
+    100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideIn {
+    0% { opacity: 0; transform: translateY(-30px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes crownBounce {
+    0%, 100% { transform: rotate(-30deg) translateY(0); }
+    50% { transform: rotate(-15deg) translateY(-5px); }
+}
+
+
+
+
+/* Modal (Background) */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  padding-top: 80px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.9);
+}
+
+/* Modal Image */
+.modal-content {
+  margin: auto;
+  display: block;
+  max-width: 80%;
+  border-radius: 10px;
+  box-shadow: 0 0 20px #000;
+  animation: zoomIn 0.3s ease-in-out;
+}
+
+/* Caption text */
+#caption {
+  margin: 15px auto;
+  text-align: center;
+  color: #ccc;
+  font-size: 18px;
+}
+
+/* Close Button */
+.close {
+  position: absolute;
+  top: 25px;
+  right: 35px;
+  color: var(--skin-colour);
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.close:hover {
+   color: var(--skin-colour);
+}
+
+/* Animation */
+@keyframes zoomIn {
+  from {transform: scale(0.7);}
+  to {transform: scale(1);}
+}
 
 
 

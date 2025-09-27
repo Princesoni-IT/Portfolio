@@ -83,14 +83,30 @@ function asideSectionTogglerBtn() {
 }
 
 /* ============================ Color Option Auto Close ============================ */
-// Color switcher ke liye auto-close logic
 const styleSwitcher = document.querySelector(".style-switcher");
-const colorButtons = document.querySelectorAll(".colors span");
+const colorButtons = document.querySelectorAll(".style-switcher .colors span");
 
 colorButtons.forEach(btn => {
     btn.addEventListener("click", () => {
-        // user ne color select kiya, ab switcher band kar do
+        // color select karne ke baad hi switcher close
         styleSwitcher.classList.remove("open");
     });
 });
 
+
+/* ============================ Certificate Modal ============================ */
+// Function to open modal
+function openModal(img) {
+    var modal = document.getElementById("imgModal");
+    var modalImg = document.getElementById("modalImg");
+    var caption = document.getElementById("caption");
+
+    modal.style.display = "block";
+    modalImg.src = img.src;
+    caption.innerHTML = img.alt;
+}
+
+// Function to close modal
+function closeModal() {
+    document.getElementById("imgModal").style.display = "none";
+}
