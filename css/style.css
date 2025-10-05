@@ -384,6 +384,8 @@ h3.my-profession
     border-right: 10px solid var(--skin-colour);
     bottom: 44px;
     right: 60px;
+    margin-bottom: -52px;
+    border-bottom-right-radius: 20px;
 }
 .home-img::before
 {
@@ -395,12 +397,16 @@ h3.my-profession
     border-left: 10px solid var(--skin-colour);
     top: -44px;
     left: 58px;
+    margin-top: -2px;
+    border-top-left-radius: 20px; 
 }
 .home .home-img img
 {
     margin: auto;
-    height: 250px;
-    border-radius: 1%;
+    height: 350px; /* Aap is value ko apne hisab se adjust kar sakte hain */
+    width: 250px; /* Isse image ki aspect ratio bani rahegi */
+    border-radius: 10px; /* Thoda sa border radius de sakte hain */
+    margin-top: -24px;
 }
 /*========= about =========*/
 .about .about-content
