@@ -383,7 +383,7 @@ h3.my-profession
     border-bottom: 10px solid var(--skin-colour);
     border-right: 10px solid var(--skin-colour);
     bottom: 44px;
-    right: 60px;
+    right: 50px;
     margin-bottom: -52px;
     border-bottom-right-radius: 20px;
 }
@@ -396,7 +396,7 @@ h3.my-profession
     border-top: 10px solid var(--skin-colour);
     border-left: 10px solid var(--skin-colour);
     top: -44px;
-    left: 58px;
+    left: 48px;
     margin-top: -2px;
     border-top-left-radius: 20px; 
 }
