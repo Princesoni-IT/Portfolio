@@ -1,0 +1,213 @@
+/* VAPI Call Button Styles */
+
+.vapi-call-container {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 9999;
+}
+
+.vapi-call-button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 25px;
+  background: linear-gradient(135deg, var(--skin-colour, #ec1839) 0%, #ff4d6d 100%);
+  color: white;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  box-shadow: 0 8px 25px rgba(236, 24, 57, 0.4);
+  transition: all 0.3s ease;
+  animation: pulse 2s infinite;
+}
+
+.vapi-call-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 35px rgba(236, 24, 57, 0.6);
+  animation: none;
+}
+
+.vapi-call-button:active {
+  transform: translateY(-1px);
+}
+
+.vapi-call-button.active {
+  background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+  animation: pulse-active 1.5s infinite;
+}
+
+.vapi-call-icon {
+  font-size: 20px;
+  animation: ring 2s ease-in-out infinite;
+}
+
+.vapi-call-button.active .vapi-call-icon {
+  animation: shake 0.5s ease-in-out infinite;
+}
+
+.vapi-call-text {
+  font-size: 16px;
+  letter-spacing: 0.5px;
+}
+
+/* Animations */
+@keyframes pulse {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(236, 24, 57, 0.4);
+  }
+  50% {
+    box-shadow: 0 8px 35px rgba(236, 24, 57, 0.7);
+  }
+}
+
+@keyframes pulse-active {
+  0%, 100% {
+    box-shadow: 0 8px 25px rgba(220, 53, 69, 0.6);
+  }
+  50% {
+    box-shadow: 0 8px 35px rgba(220, 53, 69, 0.9);
+  }
+}
+
+@keyframes ring {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  10%, 30% {
+    transform: rotate(-10deg);
+  }
+  20%, 40% {
+    transform: rotate(10deg);
+  }
+  50% {
+    transform: rotate(0deg);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-3px);
+  }
+  75% {
+    transform: translateX(3px);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .vapi-call-container {
+    bottom: 20px;
+    right: 20px;
+  }
+
+  .vapi-call-button {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+
+  .vapi-call-icon {
+    font-size: 18px;
+  }
+
+  .vapi-call-text {
+    font-size: 14px;
+  }
+}
+
+/* Avoid overlap with nav-toggler on mobile */
+@media (max-width: 1199px) {
+  .vapi-call-container {
+    bottom: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .vapi-call-button {
+    padding: 12px 18px;
+    gap: 8px;
+  }
+
+  .vapi-call-text {
+    display: none;
+  }
+
+  .vapi-call-button {
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .vapi-call-icon {
+    font-size: 24px;
+  }
+}
+
+/* Call status indicator */
+.vapi-call-button::before {
+  content: '';
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  width: 15px;
+  height: 15px;
+  background: #28a745;
+  border-radius: 50%;
+  border: 3px solid white;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.vapi-call-button.active::before {
+  opacity: 1;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+/* Tooltip */
+.vapi-call-button::after {
+  content: 'Talk to my AI Assistant';
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+  margin-bottom: 10px;
+  padding: 8px 15px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  font-size: 13px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.vapi-call-button:hover::after {
+  opacity: 1;
+}
+
+.vapi-call-button.active::after {
+  content: 'Click to end call';
+}
+
+@media (max-width: 480px) {
+  .vapi-call-button::after {
+    display: none;
+  }
+}

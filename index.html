@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="css/skins/color-4.css" class="alternate-style" title="color-4" disabled>
   <link rel="stylesheet" href="css/skins/color-5.css" class="alternate-style" title="color-5" disabled>
   <link rel="stylesheet" href="css/style-switcher.css">
+  <link rel="stylesheet" href="css/vapi-call-button.css">
   
 </head>
 <body>
@@ -630,11 +631,22 @@ I believe in continuous learning and strive to strengthen both my technical and 
 
 <!-- Image Modal -->
 <div id="imgModal" class="modal">
-  <span class="close" onclick="closeModal()">&times;</span>
-  <img class="modal-content" id="modalImg">
-  <div id="caption"></div>
+    <span class="close" onclick="closeModal()">&times;</span>
+    <img class="modal-content" id="modalImg">
+    <div id="caption"></div>
 </div>
 
+<!-- Voice Call Widget -->
+<div class="vapi-call-container">
+  <button id="vapi-call-button" class="vapi-call-button" onclick="toggleVapiCall()">
+    <i id="vapi-call-icon" class="fas fa-phone vapi-call-icon"></i>
+    <span id="vapi-call-text" class="vapi-call-text">Call Assistant</span>
+  </button>
+</div>
+
+<!-- VAPI SDK -->
+<script src="https://cdn.vapi.ai/sdk/latest/vapi.js"></script>
+<script src="js/voice-assistant.js"></script>
 
 </body>
 </html>
