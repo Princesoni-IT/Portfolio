@@ -1,7 +1,13 @@
 // Custom Voice Assistant with Jarvis-like Male Voice
 // Configuration
 const ASSISTANT_CONFIG = {
-    welcomeMessage: "Good day! I am Prince AI Assistant. Welcome to his portfolio. Please select an option from the menu to learn more.",
+    // Set to true to use ElevenLabs API (requires API key)
+    // Set to false to use browser's Web Speech API
+    useElevenLabs: true,
+    elevenLabsApiKey: 'sk_e6f2d89f20df6b88ab0dfc6d1c16d19e0bdb38ec8f681f5d', // Get free key from elevenlabs.io
+    elevenLabsVoiceId: 'ookcfIYgQDpBT5ueX6gr', // Adam - Deep male voice  ookcfIYgQDpBT5ueX6gr    IRHApOXLvnW57QJPQH2P
+    
+    welcomeMessage: "Good day! I am Prince's AI Assistant. Welcome to his portfolio. Please select an option from the menu to learn more.",
     options: [
         {
             id: 1,
@@ -78,9 +84,6 @@ function openAssistant() {
 function closeAssistant() {
     isAssistantActive = false;
     
-    // IMMEDIATELY stop speech synthesis
-    window.speechSynthesis.cancel();
-    
     // Stop any playing audio
     if (currentAudio) {
         currentAudio.pause();
@@ -113,109 +116,90 @@ function playWelcomeMessage() {
     });
 }
 
-// Speak Text using Web Speech API
-function speakText(text, callback) {
-    // Stop any current speech
-    window.speechSynthesis.cancel();
-    
-    const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-US'; // English US - better male voice availability
-    utterance.rate = 0.9; // Slightly slower for deeper effect
-    utterance.pitch = 0.5; // VERY low pitch for male voice (0.5 = deepest)
-    utterance.volume = 1;
-    
-    // Get available voices and select best male voice
-    const voices = window.speechSynthesis.getVoices();
-    
-    // Priority order for Jarvis-like male voices (Desktop + Mobile)
-    const preferredVoices = [
-        'Google UK English Male',
-        'Microsoft David',
-        'Microsoft Mark',
-        'Google US English Male',
-        'Alex',
-        'Daniel',
-        'Male',
-        'en-us-x-sfg#male',  // Google mobile voice
-        'en-gb-x-gba#male',  // Google mobile voice
-        'en-in-x-end#male'   // Google mobile voice India
-    ];
-    
-    // Try to find preferred male voice
-    let selectedVoice = null;
-    for (let preferred of preferredVoices) {
-        selectedVoice = voices.find(voice => 
-            voice.name.includes(preferred) || 
-            voice.voiceURI.includes(preferred)
-        );
-        if (selectedVoice) break;
+// Speak Text using ElevenLabs API ONLY
+async function speakText(text, callback) {
+    // Stop any current audio
+    if (currentAudio) {
+        currentAudio.pause();
+        currentAudio = null;
     }
     
-    // If no preferred voice found, find any male voice (check name and URI)
-    if (!selectedVoice) {
-        selectedVoice = voices.find(voice => 
-            (voice.name.toLowerCase().includes('male') ||
-            voice.voiceURI.toLowerCase().includes('male')) &&
-            !voice.name.toLowerCase().includes('female') &&
-            !voice.voiceURI.toLowerCase().includes('female')
-        );
+    try {
+        await speakWithElevenLabs(text, callback);
+    } catch (error) {
+        console.error('❌ ElevenLabs API error:', error);
+        // Execute callback even on error
+        if (isAssistantActive && callback) {
+            callback();
+        }
     }
+}
+
+// Speak with ElevenLabs API (Premium Male Voice)
+async function speakWithElevenLabs(text, callback) {
+    console.log('🎙️ Using ElevenLabs API for premium male voice...');
     
-    // Try to find English voice that's NOT female (strict filtering)
-    if (!selectedVoice) {
-        const femaleKeywords = ['female', 'woman', 'girl', 'samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona'];
-        selectedVoice = voices.find(voice => {
-            const name = voice.name.toLowerCase();
-            const uri = voice.voiceURI.toLowerCase();
-            const isFemale = femaleKeywords.some(keyword => name.includes(keyword) || uri.includes(keyword));
-            return voice.lang.includes('en') && !isFemale;
+    const url = `https://api.elevenlabs.io/v1/text-to-speech/${ASSISTANT_CONFIG.elevenLabsVoiceId}`;
+    
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'audio/mpeg',
+                'Content-Type': 'application/json',
+                'xi-api-key': ASSISTANT_CONFIG.elevenLabsApiKey
+            },
+            body: JSON.stringify({
+                text: text,
+                model_id: 'eleven_monolingual_v1',
+                voice_settings: {
+                    stability: 0.5,
+                    similarity_boost: 0.75,
+                    style: 0.0,
+                    use_speaker_boost: true
+                }
+            })
         });
-    }
-    
-    // Fallback to first English voice (even if female, pitch will make it deeper)
-    if (!selectedVoice) {
-        selectedVoice = voices.find(voice => voice.lang.includes('en'));
-    }
-    
-    // Final fallback to first available voice
-    if (!selectedVoice && voices.length > 0) {
-        selectedVoice = voices[0];
-    }
-    
-    if (selectedVoice) {
-        utterance.voice = selectedVoice;
-        const isFemale = selectedVoice.name.toLowerCase().includes('female') || 
-                        selectedVoice.voiceURI.toLowerCase().includes('female');
         
-        console.log('🎙️ Using voice:', selectedVoice.name);
-        console.log('   Voice URI:', selectedVoice.voiceURI);
-        console.log('   Language:', selectedVoice.lang);
-        console.log('   Local:', selectedVoice.localService);
-        console.log('   Pitch:', utterance.pitch, '(0.5 = deepest male voice)');
+        if (!response.ok) {
+            throw new Error(`ElevenLabs API error: ${response.status} ${response.statusText}`);
+        }
         
-        if (isFemale) {
-            console.warn('⚠️ Female voice detected! Using very low pitch (0.5) to make it sound deeper.');
-        } else {
-            console.log('✅ Male or neutral voice selected!');
-        }
+        const audioBlob = await response.blob();
+        const audioUrl = URL.createObjectURL(audioBlob);
+        
+        currentAudio = new Audio(audioUrl);
+        
+        currentAudio.onplay = () => {
+            console.log('✅ ElevenLabs voice playing...');
+        };
+        
+        currentAudio.onended = () => {
+            console.log('✅ ElevenLabs voice finished.');
+            URL.revokeObjectURL(audioUrl);
+            currentAudio = null;
+            // Only execute callback if assistant is still active
+            if (isAssistantActive && callback) {
+                callback();
+            }
+        };
+        
+        currentAudio.onerror = (error) => {
+            console.error('❌ Audio playback error:', error);
+            URL.revokeObjectURL(audioUrl);
+            currentAudio = null;
+            // Only execute callback if assistant is still active
+            if (isAssistantActive && callback) {
+                callback();
+            }
+        };
+        
+        await currentAudio.play();
+        
+    } catch (error) {
+        console.error('❌ ElevenLabs API error:', error);
+        throw error; // Re-throw to trigger fallback
     }
-    
-    utterance.onend = () => {
-        // Only execute callback if assistant is still active
-        if (isAssistantActive && callback) {
-            callback();
-        }
-    };
-    
-    utterance.onerror = (error) => {
-        console.error('Speech synthesis error:', error);
-        // Only execute callback if assistant is still active
-        if (isAssistantActive && callback) {
-            callback();
-        }
-    };
-    
-    window.speechSynthesis.speak(utterance);
 }
 
 // Show Toggle Menu
@@ -306,35 +290,10 @@ function selectOption(option) {
     });
 }
 
-// Load voices when available
-if (typeof speechSynthesis !== 'undefined') {
-    speechSynthesis.onvoiceschanged = () => {
-        const voices = speechSynthesis.getVoices();
-        console.log('=== Available Voices ===');
-        console.log('Total voices:', voices.length);
-        
-        // Log male voices
-        console.log('\n--- Male/Preferred Voices ---');
-        voices.forEach((voice, index) => {
-            if (voice.name.toLowerCase().includes('male') || 
-                voice.voiceURI.toLowerCase().includes('male') ||
-                voice.name.includes('David') || 
-                voice.name.includes('Mark') ||
-                voice.name.includes('Daniel') ||
-                voice.name.includes('Alex')) {
-                console.log(`${index}: ${voice.name} | URI: ${voice.voiceURI} (${voice.lang})`);
-            }
-        });
-        
-        // Log all English voices
-        console.log('\n--- All English Voices ---');
-        voices.forEach((voice, index) => {
-            if (voice.lang.includes('en')) {
-                console.log(`${index}: ${voice.name} | URI: ${voice.voiceURI} (${voice.lang})`);
-            }
-        });
-    };
-}
+// Log ElevenLabs status on load
+console.log('🎙️ Voice Assistant initialized with ElevenLabs API');
+console.log('Voice ID:', ASSISTANT_CONFIG.elevenLabsVoiceId);
+console.log('API Key:', ASSISTANT_CONFIG.elevenLabsApiKey ? '✅ Configured' : '❌ Missing');
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', initVoiceAssistant);
@@ -344,7 +303,6 @@ window.addEventListener('beforeunload', () => {
     if (currentAudio) {
         currentAudio.pause();
     }
-    window.speechSynthesis.cancel();
 });
 
 // Make functions globally available
