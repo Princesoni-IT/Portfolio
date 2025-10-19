@@ -1,7 +1,7 @@
 // Custom Voice Assistant with Jarvis-like Male Voice
 // Configuration
 const ASSISTANT_CONFIG = {
-    welcomeMessage: "Hello thanks you to Visit our Protfolio website ! I am AI Assistant of prince. Welcome to his portfolio. Please select an option from the menu to learn more.",
+    welcomeMessage: "Good day! I am Prince AI Assistant. Welcome to his portfolio. Please select an option from the menu to learn more.",
     options: [
         {
             id: 1,
@@ -120,14 +120,14 @@ function speakText(text, callback) {
     
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.lang = 'en-IN'; // English India for better male voices
-    utterance.rate = 1; // Slightly faster for Jarvis-like effect
+    utterance.rate = 0.95; // Slightly faster for Jarvis-like effect
     utterance.pitch = 0.8; // Lower pitch for deeper male voice
     utterance.volume = 1;
     
     // Get available voices and select best male voice
     const voices = window.speechSynthesis.getVoices();
     
-    // Priority order for Jarvis-like male voices
+    // Priority order for Jarvis-like male voices (Desktop + Mobile)
     const preferredVoices = [
         'Google UK English Male',
         'Microsoft David',
@@ -135,21 +135,36 @@ function speakText(text, callback) {
         'Google US English Male',
         'Alex',
         'Daniel',
-        'Samantha'
+        'Male',
+        'en-us-x-sfg#male',  // Google mobile voice
+        'en-gb-x-gba#male',  // Google mobile voice
+        'en-in-x-end#male'   // Google mobile voice India
     ];
     
     // Try to find preferred male voice
     let selectedVoice = null;
     for (let preferred of preferredVoices) {
-        selectedVoice = voices.find(voice => voice.name.includes(preferred));
+        selectedVoice = voices.find(voice => 
+            voice.name.includes(preferred) || 
+            voice.voiceURI.includes(preferred)
+        );
         if (selectedVoice) break;
     }
     
-    // If no preferred voice found, find any male English voice
+    // If no preferred voice found, find any male voice (check name and URI)
     if (!selectedVoice) {
         selectedVoice = voices.find(voice => 
-            (voice.lang.includes('en') && !voice.name.toLowerCase().includes('female')) ||
-            voice.name.toLowerCase().includes('male')
+            voice.name.toLowerCase().includes('male') ||
+            voice.voiceURI.toLowerCase().includes('male')
+        );
+    }
+    
+    // Try to find English voice that's NOT female
+    if (!selectedVoice) {
+        selectedVoice = voices.find(voice => 
+            voice.lang.includes('en') && 
+            !voice.name.toLowerCase().includes('female') &&
+            !voice.voiceURI.toLowerCase().includes('female')
         );
     }
     
@@ -165,7 +180,10 @@ function speakText(text, callback) {
     
     if (selectedVoice) {
         utterance.voice = selectedVoice;
-        console.log('Using voice:', selectedVoice.name);
+        console.log('🎙️ Using voice:', selectedVoice.name);
+        console.log('   Voice URI:', selectedVoice.voiceURI);
+        console.log('   Language:', selectedVoice.lang);
+        console.log('   Local:', selectedVoice.localService);
     }
     
     utterance.onend = () => {
@@ -285,11 +303,12 @@ if (typeof speechSynthesis !== 'undefined') {
         console.log('\n--- Male/Preferred Voices ---');
         voices.forEach((voice, index) => {
             if (voice.name.toLowerCase().includes('male') || 
+                voice.voiceURI.toLowerCase().includes('male') ||
                 voice.name.includes('David') || 
                 voice.name.includes('Mark') ||
                 voice.name.includes('Daniel') ||
                 voice.name.includes('Alex')) {
-                console.log(`${index}: ${voice.name} (${voice.lang})`);
+                console.log(`${index}: ${voice.name} | URI: ${voice.voiceURI} (${voice.lang})`);
             }
         });
         
@@ -297,7 +316,7 @@ if (typeof speechSynthesis !== 'undefined') {
         console.log('\n--- All English Voices ---');
         voices.forEach((voice, index) => {
             if (voice.lang.includes('en')) {
-                console.log(`${index}: ${voice.name} (${voice.lang})`);
+                console.log(`${index}: ${voice.name} | URI: ${voice.voiceURI} (${voice.lang})`);
             }
         });
     };
