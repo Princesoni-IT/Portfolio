@@ -1,13 +1,7 @@
-// Custom Voice Assistant with Jarvis-like Male Voice
+// Custom Voice Assistant with Male Voice
 // Configuration
 const ASSISTANT_CONFIG = {
-    // Set to true to use ElevenLabs API (requires API key)
-    // Set to false to use browser's Web Speech API
-    useElevenLabs: true,
-    elevenLabsApiKey: 'sk_e6f2d89f20df6b88ab0dfc6d1c16d19e0bdb38ec8f681f5d', // Get free key from elevenlabs.io
-    elevenLabsVoiceId: 'IRHApOXLvnW57QJPQH2P', // Adam - Deep male voice  ookcfIYgQDpBT5ueX6gr    IRHApOXLvnW57QJPQH2P
-    
-    welcomeMessage: " Hello Thank you for visiting our website I Jarvis Personal assistant of Prince. Welcome to his portfolio. Please select an option from the menu to learn more.",
+    welcomeMessage: "Good day! I am Prince AI Assistant. Welcome to his portfolio. Please select an option from the menu to learn more.",
     options: [
         {
             id: 1,
@@ -40,7 +34,6 @@ const ASSISTANT_CONFIG = {
 // State Management
 let isAssistantActive = false;
 let isPlaying = false;
-let currentAudio = null;
 
 // Initialize Voice Assistant
 function initVoiceAssistant() {
@@ -84,11 +77,8 @@ function openAssistant() {
 function closeAssistant() {
     isAssistantActive = false;
     
-    // Stop any playing audio
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
-    }
+    // Stop any speech
+    window.speechSynthesis.cancel();
     
     // Update button state
     const button = document.getElementById('vapi-call-button');
@@ -116,90 +106,69 @@ function playWelcomeMessage() {
     });
 }
 
-// Speak Text using ElevenLabs API ONLY
-async function speakText(text, callback) {
-    // Stop any current audio
-    if (currentAudio) {
-        currentAudio.pause();
-        currentAudio = null;
+// Speak Text using Web Speech API
+function speakText(text, callback) {
+    // Stop any current speech
+    window.speechSynthesis.cancel();
+    
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = 'en-US';
+    utterance.rate = 0.9;
+    utterance.pitch = 0.8;
+    utterance.volume = 1;
+    
+    // Get available voices and select best male voice
+    const voices = window.speechSynthesis.getVoices();
+    
+    // Priority order for male voices
+    const preferredVoices = [
+        'Google UK English Male',
+        'Microsoft David',
+        'Microsoft Mark',
+        'Google US English Male',
+        'Alex',
+        'Daniel',
+        'Male'
+    ];
+    
+    // Try to find preferred male voice
+    let selectedVoice = null;
+    for (let preferred of preferredVoices) {
+        selectedVoice = voices.find(voice => voice.name.includes(preferred));
+        if (selectedVoice) break;
     }
     
-    try {
-        await speakWithElevenLabs(text, callback);
-    } catch (error) {
-        console.error('❌ ElevenLabs API error:', error);
-        // Execute callback even on error
+    // Fallback to any male voice
+    if (!selectedVoice) {
+        selectedVoice = voices.find(voice => 
+            voice.name.toLowerCase().includes('male')
+        );
+    }
+    
+    // Final fallback to first English voice
+    if (!selectedVoice) {
+        selectedVoice = voices.find(voice => voice.lang.includes('en'));
+    }
+    
+    if (selectedVoice) {
+        utterance.voice = selectedVoice;
+        console.log('Using voice:', selectedVoice.name);
+    }
+    
+    utterance.onend = () => {
         if (isAssistantActive && callback) {
             callback();
         }
-    }
-}
-
-// Speak with ElevenLabs API (Premium Male Voice)
-async function speakWithElevenLabs(text, callback) {
-    console.log('🎙️ Using ElevenLabs API for premium male voice...');
+    };
     
-    const url = `https://api.elevenlabs.io/v1/text-to-speech/${ASSISTANT_CONFIG.elevenLabsVoiceId}`;
-    
-    try {
-        const response = await fetch(url, {
-            method: 'POST',
-            headers: {
-                'Accept': 'audio/mpeg',
-                'Content-Type': 'application/json',
-                'xi-api-key': ASSISTANT_CONFIG.elevenLabsApiKey
-            },
-            body: JSON.stringify({
-                text: text,
-                model_id: 'eleven_monolingual_v1',
-                voice_settings: {
-                    stability: 0.5,
-                    similarity_boost: 0.75,
-                    style: 0.0,
-                    use_speaker_boost: true
-                }
-            })
-        });
-        
-        if (!response.ok) {
-            throw new Error(`ElevenLabs API error: ${response.status} ${response.statusText}`);
+    utterance.onerror = (error) => {
+        console.error('Speech synthesis error:', error);
+        if (isAssistantActive && callback) {
+            callback();
         }
-        
-        const audioBlob = await response.blob();
-        const audioUrl = URL.createObjectURL(audioBlob);
-        
-        currentAudio = new Audio(audioUrl);
-        
-        currentAudio.onplay = () => {
-            console.log('✅ ElevenLabs voice playing...');
-        };
-        
-        currentAudio.onended = () => {
-            console.log('✅ ElevenLabs voice finished.');
-            URL.revokeObjectURL(audioUrl);
-            currentAudio = null;
-            // Only execute callback if assistant is still active
-            if (isAssistantActive && callback) {
-                callback();
-            }
-        };
-        
-        currentAudio.onerror = (error) => {
-            console.error('❌ Audio playback error:', error);
-            URL.revokeObjectURL(audioUrl);
-            currentAudio = null;
-            // Only execute callback if assistant is still active
-            if (isAssistantActive && callback) {
-                callback();
-            }
-        };
-        
-        await currentAudio.play();
-        
-    } catch (error) {
-        console.error('❌ ElevenLabs API error:', error);
-        throw error; // Re-throw to trigger fallback
-    }
+    };
+    
+    window.speechSynthesis.speak(utterance);
 }
 
 // Show Toggle Menu
@@ -290,19 +259,16 @@ function selectOption(option) {
     });
 }
 
-// Log ElevenLabs status on load
-console.log('🎙️ Voice Assistant initialized with ElevenLabs API');
-console.log('Voice ID:', ASSISTANT_CONFIG.elevenLabsVoiceId);
-console.log('API Key:', ASSISTANT_CONFIG.elevenLabsApiKey ? '✅ Configured' : '❌ Missing');
+// Log Voice Assistant status on load
+console.log('🎙️ Voice Assistant initialized with Browser Voice');
+console.log('✅ FREE unlimited voice - No API needed');
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', initVoiceAssistant);
 
 // Cleanup on page unload
 window.addEventListener('beforeunload', () => {
-    if (currentAudio) {
-        currentAudio.pause();
-    }
+    window.speechSynthesis.cancel();
 });
 
 // Make functions globally available
