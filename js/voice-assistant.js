@@ -5,7 +5,7 @@ const ASSISTANT_CONFIG = {
     // Set to false to use browser's Web Speech API
     useElevenLabs: true,
     elevenLabsApiKey: 'sk_e6f2d89f20df6b88ab0dfc6d1c16d19e0bdb38ec8f681f5d', // Get free key from elevenlabs.io
-    elevenLabsVoiceId: 'ookcfIYgQDpBT5ueX6gr', // Adam - Deep male voice  ookcfIYgQDpBT5ueX6gr    IRHApOXLvnW57QJPQH2P
+    elevenLabsVoiceId: 'IRHApOXLvnW57QJPQH2P', // Adam - Deep male voice  ookcfIYgQDpBT5ueX6gr    IRHApOXLvnW57QJPQH2P
     
     welcomeMessage: "Good day! I am Prince AI Assistant. Welcome to his portfolio. Please select an option from the menu to learn more.",
     options: [
