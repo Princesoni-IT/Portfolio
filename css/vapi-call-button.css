@@ -211,3 +211,237 @@
     display: none;
   }
 }
+
+/* Voice Toggle Menu Styles */
+.voice-toggle-menu {
+  position: fixed;
+  bottom: 120px;
+  right: 30px;
+  width: 350px;
+  max-height: 500px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 20px;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.3);
+  z-index: 9998;
+  opacity: 0;
+  transform: translateY(20px) scale(0.9);
+  transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  overflow: hidden;
+}
+
+.voice-toggle-menu.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.toggle-menu-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background: linear-gradient(135deg, var(--skin-colour, #ec1839) 0%, #ff4d6d 100%);
+  color: white;
+  border-radius: 20px 20px 0 0;
+}
+
+.toggle-menu-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+}
+
+.close-menu-btn {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  font-size: 16px;
+}
+
+.close-menu-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: rotate(90deg);
+}
+
+.toggle-menu-options {
+  padding: 15px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.toggle-option-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  background: white;
+  border: 2px solid #e9ecef;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  text-align: left;
+}
+
+.toggle-option-btn:hover {
+  border-color: var(--skin-colour, #ec1839);
+  background: linear-gradient(135deg, rgba(236, 24, 57, 0.05) 0%, rgba(255, 77, 109, 0.05) 100%);
+  transform: translateX(5px);
+  box-shadow: 0 5px 15px rgba(236, 24, 57, 0.2);
+}
+
+.toggle-option-btn:active {
+  transform: translateX(5px) scale(0.98);
+}
+
+.toggle-option-btn i {
+  font-size: 20px;
+  color: var(--skin-colour, #ec1839);
+  min-width: 25px;
+  text-align: center;
+}
+
+.toggle-option-btn span {
+  flex: 1;
+}
+
+/* Scrollbar Styling */
+.toggle-menu-options::-webkit-scrollbar {
+  width: 6px;
+}
+
+.toggle-menu-options::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.toggle-menu-options::-webkit-scrollbar-thumb {
+  background: var(--skin-colour, #ec1839);
+  border-radius: 10px;
+}
+
+.toggle-menu-options::-webkit-scrollbar-thumb:hover {
+  background: #d01530;
+}
+
+/* Responsive Design for Toggle Menu */
+@media (max-width: 768px) {
+  .voice-toggle-menu {
+    width: 320px;
+    right: 20px;
+    bottom: 100px;
+  }
+  
+  .toggle-menu-header h3 {
+    font-size: 16px;
+  }
+  
+  .toggle-option-btn {
+    padding: 12px 15px;
+    font-size: 14px;
+  }
+  
+  .toggle-option-btn i {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .voice-toggle-menu {
+    width: calc(100vw - 40px);
+    right: 20px;
+    left: 20px;
+    bottom: 90px;
+  }
+  
+  .toggle-menu-header {
+    padding: 15px;
+  }
+  
+  .toggle-menu-header h3 {
+    font-size: 15px;
+  }
+  
+  .toggle-menu-options {
+    padding: 10px;
+  }
+  
+  .toggle-option-btn {
+    padding: 12px 15px;
+    font-size: 13px;
+    gap: 12px;
+  }
+}
+
+/* Animation for option buttons */
+@keyframes slideInOption {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.toggle-option-btn {
+  animation: slideInOption 0.3s ease forwards;
+}
+
+.toggle-option-btn:nth-child(1) { animation-delay: 0.1s; }
+.toggle-option-btn:nth-child(2) { animation-delay: 0.2s; }
+.toggle-option-btn:nth-child(3) { animation-delay: 0.3s; }
+.toggle-option-btn:nth-child(4) { animation-delay: 0.4s; }
+.toggle-option-btn:nth-child(5) { animation-delay: 0.5s; }
+
+/* Speaking indicator */
+.speaking-indicator {
+  position: fixed;
+  bottom: 120px;
+  right: 30px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 14px;
+  font-family: 'Poppins', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 9997;
+  animation: fadeInUp 0.3s ease;
+}
+
+.speaking-indicator::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: #28a745;
+  border-radius: 50%;
+  animation: pulse 1s infinite;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
