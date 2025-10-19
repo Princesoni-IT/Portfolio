@@ -119,9 +119,9 @@ function speakText(text, callback) {
     window.speechSynthesis.cancel();
     
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = 'en-IN'; // English India for better male voices
-    utterance.rate = 0.95; // Slightly faster for Jarvis-like effect
-    utterance.pitch = 0.8; // Lower pitch for deeper male voice
+    utterance.lang = 'en-US'; // English US - better male voice availability
+    utterance.rate = 0.9; // Slightly slower for deeper effect
+    utterance.pitch = 0.5; // VERY low pitch for male voice (0.5 = deepest)
     utterance.volume = 1;
     
     // Get available voices and select best male voice
@@ -154,21 +154,25 @@ function speakText(text, callback) {
     // If no preferred voice found, find any male voice (check name and URI)
     if (!selectedVoice) {
         selectedVoice = voices.find(voice => 
-            voice.name.toLowerCase().includes('male') ||
-            voice.voiceURI.toLowerCase().includes('male')
-        );
-    }
-    
-    // Try to find English voice that's NOT female
-    if (!selectedVoice) {
-        selectedVoice = voices.find(voice => 
-            voice.lang.includes('en') && 
+            (voice.name.toLowerCase().includes('male') ||
+            voice.voiceURI.toLowerCase().includes('male')) &&
             !voice.name.toLowerCase().includes('female') &&
             !voice.voiceURI.toLowerCase().includes('female')
         );
     }
     
-    // Fallback to first English voice
+    // Try to find English voice that's NOT female (strict filtering)
+    if (!selectedVoice) {
+        const femaleKeywords = ['female', 'woman', 'girl', 'samantha', 'victoria', 'karen', 'moira', 'tessa', 'fiona'];
+        selectedVoice = voices.find(voice => {
+            const name = voice.name.toLowerCase();
+            const uri = voice.voiceURI.toLowerCase();
+            const isFemale = femaleKeywords.some(keyword => name.includes(keyword) || uri.includes(keyword));
+            return voice.lang.includes('en') && !isFemale;
+        });
+    }
+    
+    // Fallback to first English voice (even if female, pitch will make it deeper)
     if (!selectedVoice) {
         selectedVoice = voices.find(voice => voice.lang.includes('en'));
     }
@@ -180,10 +184,20 @@ function speakText(text, callback) {
     
     if (selectedVoice) {
         utterance.voice = selectedVoice;
+        const isFemale = selectedVoice.name.toLowerCase().includes('female') || 
+                        selectedVoice.voiceURI.toLowerCase().includes('female');
+        
         console.log('🎙️ Using voice:', selectedVoice.name);
         console.log('   Voice URI:', selectedVoice.voiceURI);
         console.log('   Language:', selectedVoice.lang);
         console.log('   Local:', selectedVoice.localService);
+        console.log('   Pitch:', utterance.pitch, '(0.5 = deepest male voice)');
+        
+        if (isFemale) {
+            console.warn('⚠️ Female voice detected! Using very low pitch (0.5) to make it sound deeper.');
+        } else {
+            console.log('✅ Male or neutral voice selected!');
+        }
     }
     
     utterance.onend = () => {
