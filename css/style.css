@@ -517,6 +517,32 @@ h3.my-profession
     font-size: 18px;
     color: var(--text-black-700);
 }
+/* Social Media Links */
+.social-links {
+    margin-top: 25px;
+    display: flex;
+    gap: 20px;
+}
+.social-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--bg-black-100);
+    border: 2px solid var(--skin-colour);
+    color: var(--skin-colour);
+    font-size: 24px;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+.social-icon:hover {
+    background: var(--skin-colour);
+    color: #ffffff;
+    transform: translateY(-5px) scale(1.1);
+    box-shadow: 0 10px 25px rgba(236, 24, 57, 0.5);
+}
 .home .home-img
 {
     flex: 0 0 40%;
