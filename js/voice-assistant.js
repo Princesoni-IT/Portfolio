@@ -1,32 +1,32 @@
 // Custom Voice Assistant with Male Voice
 // Configuration
 const ASSISTANT_CONFIG = {
-    welcomeMessage: "Good day! I am Prince AI Assistant. Welcome to his portfolio. Please select an option from the menu to learn more.",
+    welcomeMessage: "Greetings! I’m Prince AI — your virtual assistant for exploring Prince Soni’s professional world. Discover his journey across software development, data analytics, and artificial intelligence. Please choose a category below to begin.",
     options: [
         {
             id: 1,
             label: "About Prince",
-            message: "Prince Soni is a Bachelor of Computer Applications student at Prestige Institute of Management and Research. He specializes in Data Analytics, Full Stack Development, and Cybersecurity. He has earned multiple certifications in Python, C, and SQL programming."
+            message: "Prince Soni is a Bachelor of Computer Applications student at Prestige Institute of Management and Research. He specializes in Full Stack Development, Data Analytics, and Artificial Intelligence. Passionate about solving real-world problems through technology, he blends creativity with logic to design efficient, data-driven solutions that make a measurable impact."
         },
         {
             id: 2,
             label: "Services",
-            message: "Prince offers the following services: Data Analysis, Web Development, Mobile App Development, UI and UX Design, Security Analysis, and IT Solutions and Training. He creates modern, responsive, and secure web applications."
+            message: "Prince offers professional services including Web and App Development, Data Analysis, Machine Learning Model Development, and IT Consulting. His projects emphasize clean design, optimized performance, and modern security practices. Whether it’s building responsive websites or intelligent automation systems, he delivers solutions that align with client goals."
         },
         {
             id: 3,
             label: "Projects",
-            message: "Prince has developed several notable projects including a Portfolio Website, ALMANET Alumni Database Management System, Sales Insights Dashboard, and Prestige Portal Module Development. All projects are available on GitHub for review."
+            message: "Prince has built a variety of impactful projects, including: a Personal Portfolio Website integrating AI Assistant, ALMANET — an Alumni Management System for streamlined data handling, Sales Insights Dashboard for performance analytics, and a Prestige Portal Module for institutional automation. Each project demonstrates his technical skill, problem-solving mindset, and dedication to quality."
         },
         {
             id: 4,
-            label: "Contact",
-            message: "You can reach Prince at the following: Email: princesoni dot it at gmail dot com. Phone: plus 91 9343596430. Location: Gwalior, India. He is always open to new opportunities and collaborations."
+            label: "Certifications",
+            message: "Prince holds multiple professional certifications, including Oracle Analytics Cloud Professional, IBM SQL & Relational Databases, Cisco Introduction to Cybersecurity, and Full Stack Development with React JS. He has also completed training in Power BI, Python, and AI/ML fundamentals. His continuous learning approach reflects his commitment to innovation and professional growth."
         },
         {
             id: 5,
-            label: "Certifications",
-            message: "Prince holds multiple professional certifications including Oracle Analytics Cloud Professional, IBM SQL and Relational Databases, C Programming from SWAYAM, Cisco Introduction to Cybersecurity, Power BI Workshop, React JS, and Full Stack Development. He believes in continuous learning and skill enhancement."
+            label: "Contact",
+            message: "You can reach Prince at princesoni.it@gmail.com or call +91 9343596430. Based in Gwalior, India — he is open to collaborations, internships, and full-time opportunities in technology and AI-driven development. Feel free to connect with him on LinkedIn or GitHub to explore his work further."
         }
     ]
 };
@@ -36,6 +36,7 @@ let isAssistantActive = false;
 let isPlaying = false;
 let ringAudio = null;
 let isRinging = false;
+let isProcessing = false; // Prevent multiple clicks
 
 // Initialize Voice Assistant
 function initVoiceAssistant() {
@@ -50,6 +51,12 @@ function initVoiceAssistant() {
 
 // Toggle Assistant
 function toggleAssistant() {
+    // Prevent multiple clicks while processing
+    if (isProcessing) {
+        console.log('⚠️ Already processing, please wait...');
+        return;
+    }
+    
     if (isAssistantActive) {
         closeAssistant();
     } else {
@@ -59,6 +66,9 @@ function toggleAssistant() {
 
 // Open Assistant
 function openAssistant() {
+    // Set processing flag
+    isProcessing = true;
+    
     // Update button state to ringing
     const button = document.getElementById('vapi-call-button');
     const icon = document.getElementById('vapi-call-icon');
@@ -71,6 +81,7 @@ function openAssistant() {
     playRingTone(() => {
         // After ring, activate assistant
         isAssistantActive = true;
+        isProcessing = false; // Clear processing flag
         
         button.classList.remove('ringing');
         button.classList.add('active');
@@ -86,6 +97,8 @@ function openAssistant() {
 // Close Assistant
 function closeAssistant() {
     isAssistantActive = false;
+    isProcessing = false; // Clear processing flag
+    isRinging = false; // Stop any ringing
     
     // Stop any speech
     window.speechSynthesis.cancel();
@@ -95,7 +108,7 @@ function closeAssistant() {
     const icon = document.getElementById('vapi-call-icon');
     const text = document.getElementById('vapi-call-text');
     
-    button.classList.remove('active');
+    button.classList.remove('active', 'ringing');
     icon.classList.remove('fa-phone-slash');
     icon.classList.add('fa-phone');
     text.textContent = 'Call Assistant';
@@ -109,6 +122,12 @@ function closeAssistant() {
 
 // Play Ring Tone (Realistic Phone Ring)
 function playRingTone(callback) {
+    // Stop any previous ring
+    if (isRinging) {
+        console.log('⚠️ Stopping previous ring...');
+        isRinging = false;
+    }
+    
     isRinging = true;
     console.log('📞 Ring tone playing...');
     
