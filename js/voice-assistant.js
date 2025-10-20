@@ -34,6 +34,8 @@ const ASSISTANT_CONFIG = {
 // State Management
 let isAssistantActive = false;
 let isPlaying = false;
+let ringAudio = null;
+let isRinging = false;
 
 // Initialize Voice Assistant
 function initVoiceAssistant() {
@@ -57,20 +59,28 @@ function toggleAssistant() {
 
 // Open Assistant
 function openAssistant() {
-    isAssistantActive = true;
-    
-    // Update button state
+    // Update button state to ringing
     const button = document.getElementById('vapi-call-button');
     const icon = document.getElementById('vapi-call-icon');
     const text = document.getElementById('vapi-call-text');
     
-    button.classList.add('active');
-    icon.classList.remove('fa-phone');
-    icon.classList.add('fa-phone-slash');
-    text.textContent = 'End Call';
+    button.classList.add('ringing');
+    text.textContent = 'Calling...';
     
-    // Play welcome message
-    playWelcomeMessage();
+    // Play ring tone
+    playRingTone(() => {
+        // After ring, activate assistant
+        isAssistantActive = true;
+        
+        button.classList.remove('ringing');
+        button.classList.add('active');
+        icon.classList.remove('fa-phone');
+        icon.classList.add('fa-phone-slash');
+        text.textContent = 'End Call';
+        
+        // Play welcome message
+        playWelcomeMessage();
+    });
 }
 
 // Close Assistant
@@ -95,6 +105,61 @@ function closeAssistant() {
     if (toggleMenu) {
         toggleMenu.remove();
     }
+}
+
+// Play Ring Tone (Realistic Phone Ring)
+function playRingTone(callback) {
+    isRinging = true;
+    console.log('📞 Ring tone playing...');
+    
+    // Create Audio Context for ring tone
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    const duration = 3; // 3 seconds ring
+    const ringCount = 3; // 3 rings total = ~9 seconds
+    let currentRing = 0;
+    
+    function playOneRing() {
+        if (currentRing >= ringCount || !isRinging) {
+            isRinging = false;
+            console.log('✅ Ring tone finished');
+            if (callback) callback();
+            return;
+        }
+        
+        currentRing++;
+        
+        // Create oscillator for ring sound
+        const oscillator = audioContext.createOscillator();
+        const gainNode = audioContext.createGain();
+        
+        oscillator.connect(gainNode);
+        gainNode.connect(audioContext.destination);
+        
+        // Ring frequency (typical phone ring)
+        oscillator.frequency.value = 440; // A4 note
+        oscillator.type = 'sine';
+        
+        // Ring pattern: beep-beep with fade
+        const now = audioContext.currentTime;
+        
+        // First beep
+        gainNode.gain.setValueAtTime(0, now);
+        gainNode.gain.linearRampToValueAtTime(0.3, now + 0.05);
+        gainNode.gain.linearRampToValueAtTime(0, now + 0.4);
+        
+        // Second beep
+        gainNode.gain.setValueAtTime(0, now + 0.5);
+        gainNode.gain.linearRampToValueAtTime(0.3, now + 0.55);
+        gainNode.gain.linearRampToValueAtTime(0, now + 0.9);
+        
+        oscillator.start(now);
+        oscillator.stop(now + 1);
+        
+        // Wait 2 seconds between rings
+        setTimeout(() => playOneRing(), 2000);
+    }
+    
+    playOneRing();
 }
 
 // Play Welcome Message
