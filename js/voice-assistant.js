@@ -1,35 +1,36 @@
 // Custom Voice Assistant with Male Voice
 // Configuration
 const ASSISTANT_CONFIG = {
-    welcomeMessage: "Greetings! I’m Prince AI — your virtual assistant for exploring Prince Soni’s professional world. Discover his journey across software development, data analytics, and artificial intelligence. Please choose a category below to begin.",
+    welcomeMessage: "thank you for visiting Prince Soni’s portfolio. I am Jarvis — his personal AI assistant. My purpose is to guide you through his professional journey, skills, and achievements. Please choose an option below to continue.",
     options: [
         {
             id: 1,
             label: "About Prince",
-            message: "Prince Soni is a Bachelor of Computer Applications student at Prestige Institute of Management and Research. He specializes in Full Stack Development, Data Analytics, and Artificial Intelligence. Passionate about solving real-world problems through technology, he blends creativity with logic to design efficient, data-driven solutions that make a measurable impact."
+            message: "Prince Soni is a Bachelor of Computer Applications student at Prestige Institute of Management and Research. He is passionate about Artificial Intelligence, Machine Learning, and Full Stack Development. Combining data-driven insights with innovative design, he creates solutions that are both intelligent and impactful."
         },
         {
             id: 2,
             label: "Services",
-            message: "Prince offers professional services including Web and App Development, Data Analysis, Machine Learning Model Development, and IT Consulting. His projects emphasize clean design, optimized performance, and modern security practices. Whether it’s building responsive websites or intelligent automation systems, he delivers solutions that align with client goals."
+            message: "Prince provides a range of professional services including AI and Machine Learning Model Development, Data Analysis, Web and App Development, and IT Solutions. His work focuses on intelligent automation, clean user experience, and strong system security."
         },
         {
             id: 3,
             label: "Projects",
-            message: "Prince has built a variety of impactful projects, including: a Personal Portfolio Website integrating AI Assistant, ALMANET — an Alumni Management System for streamlined data handling, Sales Insights Dashboard for performance analytics, and a Prestige Portal Module for institutional automation. Each project demonstrates his technical skill, problem-solving mindset, and dedication to quality."
+            message: "Prince has developed multiple innovative projects such as his AI-integrated Personal Portfolio Website, ALMANET — an Alumni Management System, a Sales Insights Dashboard for data-driven business strategy, and a Prestige Portal Automation Module. Each project showcases his passion for merging technology and intelligence."
         },
         {
             id: 4,
             label: "Certifications",
-            message: "Prince holds multiple professional certifications, including Oracle Analytics Cloud Professional, IBM SQL & Relational Databases, Cisco Introduction to Cybersecurity, and Full Stack Development with React JS. He has also completed training in Power BI, Python, and AI/ML fundamentals. His continuous learning approach reflects his commitment to innovation and professional growth."
+            message: "Prince is certified in Oracle Analytics Cloud, IBM SQL and Databases, Cisco Cybersecurity, Power BI, React JS, and Full Stack Development. He has also trained in Artificial Intelligence and Machine Learning to strengthen his ability to build smarter systems."
         },
         {
             id: 5,
             label: "Contact",
-            message: "You can reach Prince at princesoni.it@gmail.com or call +91 9343596430. Based in Gwalior, India — he is open to collaborations, internships, and full-time opportunities in technology and AI-driven development. Feel free to connect with him on LinkedIn or GitHub to explore his work further."
+            message: "To connect with Prince, you can email him at princesoni.it@gmail.com or call +91 9343596430. He is based in Gwalior, India, and open to collaboration, internships, or full-time opportunities in AI-driven software development."
         }
     ]
 };
+
 
 // State Management
 let isAssistantActive = false;
