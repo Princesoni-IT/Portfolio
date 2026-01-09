@@ -921,6 +921,19 @@ h3.my-profession
     margin-bottom: 30px;
     
 }
+.portfolio .certification-info h4
+{
+    font-size: 16px;
+    color: var(--text-black-900);
+    line-height: 25px;
+}
+
+.portfolio .certification-info p
+{
+    font-size: 14px;
+     color: var(--text-black-700);
+}
+
 .portfolio .portfolio-item {
     flex: 0 0 50%;
     max-width: 50%;
